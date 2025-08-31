@@ -1,7 +1,7 @@
-import 'package:ai_palette_generator/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ai_palette_generator/views/screens/main_wrapper.dart';
+import 'package:ai_palette_generator/localization/app_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() {
@@ -18,23 +18,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      onGenerateTitle: (context) => AppLocal.of(context).appTitle,
+      
       localizationsDelegates: const [
-        AppLocalizations.delegate,
+        AppLocal.delegate, 
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('ar'), // Arabic
-        Locale('en'), // English
-      ],
-      locale: const Locale('ar'),
+      supportedLocales: AppLocal.supportedLocales,
+
+      locale: const Locale('ar'), 
+
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF121212),
+        cardColor: const Color(0xFF1E1E1E), 
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
+          seedColor: Colors.blue,
           brightness: Brightness.dark,
         ),
       ),

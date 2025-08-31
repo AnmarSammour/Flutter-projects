@@ -1,9 +1,9 @@
-import 'package:ai_palette_generator/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:ai_palette_generator/views/screens/favorites_screen.dart';
 import 'package:ai_palette_generator/views/screens/generate_screen.dart';
 import 'package:ai_palette_generator/views/screens/home_screen.dart';
 import 'package:ai_palette_generator/views/screens/settings_screen.dart';
+import 'package:ai_palette_generator/localization/app_local.dart';
 
 class MainWrapper extends StatefulWidget {
   const MainWrapper({super.key});
@@ -24,13 +24,10 @@ class _MainWrapperState extends State<MainWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocal.of(context);
 
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens, 
-      ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -39,13 +36,30 @@ class _MainWrapperState extends State<MainWrapper> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
+        backgroundColor: Theme.of(context).cardColor,
+        selectedItemColor: Colors.blueAccent,
         unselectedItemColor: Colors.grey,
         items: [
-          BottomNavigationBarItem(icon: const Icon(Icons.home_outlined), activeIcon: const Icon(Icons.home), label: l10n.navHome),
-          BottomNavigationBarItem(icon: const Icon(Icons.palette_outlined), activeIcon: const Icon(Icons.palette), label: l10n.navGenerate),
-          BottomNavigationBarItem(icon: const Icon(Icons.favorite_border), activeIcon: const Icon(Icons.favorite), label: l10n.navFavorites),
-          BottomNavigationBarItem(icon: const Icon(Icons.settings_outlined), activeIcon: const Icon(Icons.settings), label: l10n.navSettings),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home_outlined),
+            activeIcon: const Icon(Icons.home),
+            label: l10n.navHome,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.palette_outlined),
+            activeIcon: const Icon(Icons.palette),
+            label: l10n.navGenerate,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.favorite_border),
+            activeIcon: const Icon(Icons.favorite),
+            label: l10n.navFavorites,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings_outlined),
+            activeIcon: const Icon(Icons.settings),
+            label: l10n.navSettings,
+          ),
         ],
       ),
     );
