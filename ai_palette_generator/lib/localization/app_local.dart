@@ -1,3 +1,4 @@
+// lib/localization/app_local.dart
 import 'package:flutter/material.dart';
 
 class AppLocal {
@@ -13,6 +14,7 @@ class AppLocal {
 
   static const LocalizationsDelegate<AppLocal> delegate = _AppLocalDelegate();
 
+  // --- ARABIC ---
   static final Map<String, String> _ar = {
     'appTitle': 'مولد لوحات الألوان الذكي',
     'navHome': 'الرئيسية',
@@ -25,8 +27,22 @@ class AppLocal {
     'homeUploadImageSubtitle': 'استخراج من شعار',
     'homeFavoritesTitle': 'المفضلة',
     'homeFavoritesSubtitle': 'لوحاتك المحفوظة',
+    'generateScreenTitle': 'إنشاء لوحة ألوان',
+    'baseColorLabel': 'اللون الأساسي (اختياري)',
+    'pickColorButton': 'اختر لون',
+    'savePaletteButton': 'حفظ اللوحة',
+    'paletteSaved': 'تم حفظ اللوحة في المفضلة!',
+    'colorCountLabel': 'عدد الألوان',
+    'refreshButton': 'تحديث',
+    'copiedToClipboard': 'تم نسخ الكود: ',
+    'errorFailedToLoad': 'حدث خطأ في جلب اللوحة',
+    'settingsScreenTitle': 'الإعدادات',
+    'languageLabel': 'اللغة',
+    'arabic': 'العربية',
+    'english': 'الإنجليزية',
   };
 
+  // --- ENGLISH ---
   static final Map<String, String> _en = {
     'appTitle': 'AI Palette Generator',
     'navHome': 'Home',
@@ -39,6 +55,19 @@ class AppLocal {
     'homeUploadImageSubtitle': 'Extract from a logo',
     'homeFavoritesTitle': 'Favorites',
     'homeFavoritesSubtitle': 'Your saved palettes',
+    'generateScreenTitle': 'Generate Color Palette',
+    'baseColorLabel': 'Base Color (Optional)',
+    'pickColorButton': 'Pick a Color',
+    'savePaletteButton': 'Save Palette',
+    'paletteSaved': 'Palette saved to favorites!',
+    'colorCountLabel': 'Number of Colors',
+    'refreshButton': 'Refresh',
+    'copiedToClipboard': 'Copied to clipboard: ',
+    'errorFailedToLoad': 'Failed to load palette',
+    'settingsScreenTitle': 'Settings',
+    'languageLabel': 'Language',
+    'arabic': 'Arabic',
+    'english': 'English',
   };
 
   static final Map<String, Map<String, String>> _localizedValues = {
@@ -46,6 +75,7 @@ class AppLocal {
     'en': _en,
   };
 
+  // --- Getters ---
   String get appTitle => _localizedValues[locale.languageCode]!['appTitle']!;
   String get navHome => _localizedValues[locale.languageCode]!['navHome']!;
   String get navGenerate =>
@@ -66,8 +96,33 @@ class AppLocal {
       _localizedValues[locale.languageCode]!['homeFavoritesTitle']!;
   String get homeFavoritesSubtitle =>
       _localizedValues[locale.languageCode]!['homeFavoritesSubtitle']!;
+  String get generateScreenTitle =>
+      _localizedValues[locale.languageCode]!['generateScreenTitle']!;
+  String get baseColorLabel =>
+      _localizedValues[locale.languageCode]!['baseColorLabel']!;
+  String get pickColorButton =>
+      _localizedValues[locale.languageCode]!['pickColorButton']!;
+  String get savePaletteButton =>
+      _localizedValues[locale.languageCode]!['savePaletteButton']!;
+  String get paletteSaved =>
+      _localizedValues[locale.languageCode]!['paletteSaved']!;
+  String get colorCountLabel =>
+      _localizedValues[locale.languageCode]!['colorCountLabel']!;
+  String get refreshButton =>
+      _localizedValues[locale.languageCode]!['refreshButton']!;
+  String get copiedToClipboard =>
+      _localizedValues[locale.languageCode]!['copiedToClipboard']!;
+  String get errorFailedToLoad =>
+      _localizedValues[locale.languageCode]!['errorFailedToLoad']!;
+  String get settingsScreenTitle =>
+      _localizedValues[locale.languageCode]!['settingsScreenTitle']!;
+  String get languageLabel =>
+      _localizedValues[locale.languageCode]!['languageLabel']!;
+  String get arabic => _localizedValues[locale.languageCode]!['arabic']!;
+  String get english => _localizedValues[locale.languageCode]!['english']!;
 }
 
+// Delegate class (no changes needed here)
 class _AppLocalDelegate extends LocalizationsDelegate<AppLocal> {
   const _AppLocalDelegate();
 
