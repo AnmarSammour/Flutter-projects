@@ -1,0 +1,10 @@
+{
+    "@@locale": "en",
+    "appTitle": "AI Palette Generator",
+    "navHome": "Home",
+    "navGenerate": "Generate",
+    "navFavorites": "Favorites",
+    "navSettings": "Settings",
+    "settingsTitle": "Settings",
+    "settingsLanguage": "Language"
+}

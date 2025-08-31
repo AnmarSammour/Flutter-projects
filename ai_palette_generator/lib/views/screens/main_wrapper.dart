@@ -1,3 +1,4 @@
+import 'package:ai_palette_generator/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:ai_palette_generator/views/screens/favorites_screen.dart';
 import 'package:ai_palette_generator/views/screens/generate_screen.dart';
@@ -23,10 +24,12 @@ class _MainWrapperState extends State<MainWrapper> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
-      body: IndexedStack( 
+      body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: _screens, 
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -35,14 +38,14 @@ class _MainWrapperState extends State<MainWrapper> {
             _currentIndex = index;
           });
         },
-        type: BottomNavigationBarType.fixed, 
-        selectedItemColor: Colors.blue, 
-        unselectedItemColor: Colors.grey, 
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'الرئيسية'),
-          BottomNavigationBarItem(icon: Icon(Icons.palette_outlined), activeIcon: Icon(Icons.palette), label: 'إنشاء'),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite_border), activeIcon: Icon(Icons.favorite), label: 'المفضلة'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings_outlined), activeIcon: Icon(Icons.settings), label: 'الإعدادات'),
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        items: [
+          BottomNavigationBarItem(icon: const Icon(Icons.home_outlined), activeIcon: const Icon(Icons.home), label: l10n.navHome),
+          BottomNavigationBarItem(icon: const Icon(Icons.palette_outlined), activeIcon: const Icon(Icons.palette), label: l10n.navGenerate),
+          BottomNavigationBarItem(icon: const Icon(Icons.favorite_border), activeIcon: const Icon(Icons.favorite), label: l10n.navFavorites),
+          BottomNavigationBarItem(icon: const Icon(Icons.settings_outlined), activeIcon: const Icon(Icons.settings), label: l10n.navSettings),
         ],
       ),
     );
