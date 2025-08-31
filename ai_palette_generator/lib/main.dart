@@ -4,8 +4,16 @@ import 'package:ai_palette_generator/views/screens/main_wrapper.dart';
 import 'package:ai_palette_generator/localization/app_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:ai_palette_generator/controllers/language_controller.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:ai_palette_generator/models/color_adapter.dart';
+import 'package:ai_palette_generator/models/color_palette.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(ColorPaletteAdapter());
+  Hive.registerAdapter(ColorAdapter());
+  await Hive.openBox<ColorPalette>('favorites');
   runApp(const ProviderScope(child: MyApp()));
 }
 
