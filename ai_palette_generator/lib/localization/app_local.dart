@@ -63,6 +63,27 @@ class AppLocal {
     'secondary': 'اللون الثانوي (للعناصر الداعمة)',
     'background': 'لون الخلفية (للمساحات الفارغة)',
     'accent': 'لون مميز (للفت الانتباه)',
+    'homeGradientGeneratorTitle': 'إنشاء تدرج',
+    'homeGradientGeneratorSubtitle': 'تدرجات خطية وشعاعية',
+    'gradientScreenTitle': 'مولد التدرجات اللونية',
+    'gradientColors': 'الألوان',
+    'gradientType': 'نوع التدرج',
+    'gradientLinear': 'خطي',
+    'gradientRadial': 'شعاعي',
+    'gradientAddColor': 'إضافة لون',
+    'gradientRemoveColor': 'إزالة اللون',
+    'gradientPreview': 'معاينة',
+    'gradientAlignment': 'اتجاه التدرج',
+    'gradientSave': 'حفظ التدرج',
+    'gradientCopyCode': 'نسخ كود CSS',
+    'gradientCodeCopied': 'تم نسخ كود CSS للتدرج!',
+    'gradientSaved': 'تم حفظ التدرج في المفضلة!',
+    'alignLinear': 'خطي',
+    'alignRadial': 'شعاعي',
+    'alignLinearLeftRight': 'خطي (من اليسار لليمين)',
+    'alignLinearTopBottom': 'خطي (من الأعلى للأسفل)',
+    'alignLinearTopLeftBottomRight': 'خطي (مائل من الأعلى يسار)',
+    'alignLinearBottomLeftTopRight': 'خطي (مائل من الأسفل يسار)',
   };
 
   // --- ENGLISH ---
@@ -121,6 +142,27 @@ class AppLocal {
     'secondary': 'Secondary',
     'background': 'Background',
     'accent': 'Accent',
+    'homeGradientGeneratorTitle': 'Create Gradient',
+    'homeGradientGeneratorSubtitle': 'Linear & radial gradients',
+    'gradientScreenTitle': 'Gradient Generator',
+    'gradientColors': 'Colors',
+    'gradientType': 'Gradient Type',
+    'gradientLinear': 'Linear',
+    'gradientRadial': 'Radial',
+    'gradientAddColor': 'Add Color',
+    'gradientRemoveColor': 'Remove Color',
+    'gradientPreview': 'Preview',
+    'gradientAlignment': 'Gradient Alignment',
+    'gradientSave': 'Save Gradient',
+    'gradientCopyCode': 'Copy CSS Code',
+    'gradientCodeCopied': 'CSS Gradient code copied!',
+    'gradientSaved': 'Gradient saved to favorites!',
+    'alignLinear': 'Linear',
+    'alignRadial': 'Radial',
+    'alignLinearLeftRight': 'Linear (Left to Right)',
+    'alignLinearTopBottom': 'Linear (Top to Bottom)',
+    'alignLinearTopLeftBottomRight': 'Linear (Top-Left to Bottom-Right)',
+    'alignLinearBottomLeftTopRight': 'Linear (Bottom-Left to Top-Right)',
   };
 
   static final Map<String, Map<String, String>> _localizedValues = {
@@ -226,6 +268,48 @@ class AppLocal {
   String get background =>
       _localizedValues[locale.languageCode]!['background']!;
   String get accent => _localizedValues[locale.languageCode]!['accent']!;
+  String get homeGradientGeneratorTitle =>
+      _localizedValues[locale.languageCode]!['homeGradientGeneratorTitle']!;
+  String get homeGradientGeneratorSubtitle =>
+      _localizedValues[locale.languageCode]!['homeGradientGeneratorSubtitle']!;
+  String get gradientScreenTitle =>
+      _localizedValues[locale.languageCode]!['gradientScreenTitle']!;
+  String get gradientColors =>
+      _localizedValues[locale.languageCode]!['gradientColors']!;
+  String get gradientType =>
+      _localizedValues[locale.languageCode]!['gradientType']!;
+  String get gradientLinear =>
+      _localizedValues[locale.languageCode]!['gradientLinear']!;
+  String get gradientRadial =>
+      _localizedValues[locale.languageCode]!['gradientRadial']!;
+  String get gradientAddColor =>
+      _localizedValues[locale.languageCode]!['gradientAddColor']!;
+  String get gradientRemoveColor =>
+      _localizedValues[locale.languageCode]!['gradientRemoveColor']!;
+  String get gradientPreview =>
+      _localizedValues[locale.languageCode]!['gradientPreview']!;
+  String get gradientAlignment =>
+      _localizedValues[locale.languageCode]!['gradientAlignment']!;
+  String get gradientSave =>
+      _localizedValues[locale.languageCode]!['gradientSave']!;
+  String get gradientCopyCode =>
+      _localizedValues[locale.languageCode]!['gradientCopyCode']!;
+  String get gradientCodeCopied =>
+      _localizedValues[locale.languageCode]!['gradientCodeCopied']!;
+  String get gradientSaved =>
+      _localizedValues[locale.languageCode]!['gradientSaved']!;
+  String get alignLinear =>
+      _localizedValues[locale.languageCode]!['alignLinear']!;
+  String get alignRadial =>
+      _localizedValues[locale.languageCode]!['alignRadial']!;
+  String get alignLinearLeftRight =>
+      _localizedValues[locale.languageCode]!['alignLinearLeftRight']!;
+  String get alignLinearTopBottom =>
+      _localizedValues[locale.languageCode]!['alignLinearTopBottom']!;
+  String get alignLinearTopLeftBottomRight =>
+      _localizedValues[locale.languageCode]!['alignLinearTopLeftBottomRight']!;
+  String get alignLinearBottomLeftTopRight =>
+      _localizedValues[locale.languageCode]!['alignLinearBottomLeftTopRight']!;
 }
 
 // Delegate class
