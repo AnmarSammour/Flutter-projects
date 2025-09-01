@@ -1,12 +1,14 @@
+import 'package:ai_palette_generator/controllers/page_index_provider.dart';
 import 'package:ai_palette_generator/views/widgets/option_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ai_palette_generator/localization/app_local.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocal.of(context);
     final theme = Theme.of(context);
 
@@ -21,9 +23,7 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Text(
                   l10n.appTitle,
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
               const SizedBox(height: 24),
@@ -39,21 +39,26 @@ class HomeScreen extends StatelessWidget {
                       subtitle: l10n.homeGeneratePaletteSubtitle,
                       icon: Icons.palette_outlined,
                       color: Colors.blueAccent,
-                      onTap: () {},
+                      onTap: () {
+                        ref.read(pageIndexProvider.notifier).state = 1;
+                      },
                     ),
                     OptionCard(
                       title: l10n.homeUploadImageTitle,
                       subtitle: l10n.homeUploadImageSubtitle,
                       icon: Icons.image_outlined,
                       color: Colors.greenAccent,
-                      onTap: () {},
+                      onTap: () {
+                      },
                     ),
                     OptionCard(
                       title: l10n.homeFavoritesTitle,
                       subtitle: l10n.homeFavoritesSubtitle,
                       icon: Icons.favorite_border,
                       color: Colors.redAccent,
-                      onTap: () {},
+                      onTap: () {
+                        ref.read(pageIndexProvider.notifier).state = 2;
+                      },
                     ),
                   ],
                 ),

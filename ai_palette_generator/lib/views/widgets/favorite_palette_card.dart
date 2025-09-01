@@ -1,3 +1,4 @@
+import 'package:ai_palette_generator/localization/app_local.dart';
 import 'package:ai_palette_generator/models/color_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,42 +15,41 @@ class FavoritePaletteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocal.of(context);
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      clipBehavior: Clip.antiAlias, // لضمان أن المحتوى يتبع الحواف الدائرية
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // شريط الألوان
           SizedBox(
             height: 80,
             child: Row(
               children: palette.colors.map((color) {
-                return Expanded(
-                  child: Container(color: color),
-                );
+                return Expanded(child: Container(color: color));
               }).toList(),
             ),
           ),
-          // تفاصيل اللوحة
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // أكواد HEX
                 Expanded(
                   child: Wrap(
                     spacing: 8.0,
                     runSpacing: 4.0,
                     children: palette.colors.map((color) {
-                      final hexCode = '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+                      final hexCode =
+                          '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
                       return InkWell(
                         onTap: () {
                           Clipboard.setData(ClipboardData(text: hexCode));
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('تم نسخ: $hexCode')),
+                            SnackBar(
+                              content: Text('${l10n.copiedMessage}$hexCode'),
+                            ),
                           );
                         },
                         child: Text(
@@ -60,11 +60,10 @@ class FavoritePaletteCard extends StatelessWidget {
                     }).toList(),
                   ),
                 ),
-                // زر الحذف
                 IconButton(
                   icon: Icon(Icons.delete_outline, color: Colors.red[300]),
                   onPressed: onRemove,
-                  tooltip: 'إزالة من المفضلة',
+                  tooltip: l10n.removeFavoriteTooltip,
                 ),
               ],
             ),

@@ -10,7 +10,6 @@ class FavoritesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocal.of(context);
-    // مشاهدة قائمة المفضلة
     final favoritePalettes = ref.watch(favoritesProvider);
 
     return Scaffold(
@@ -21,16 +20,32 @@ class FavoritesScreen extends ConsumerWidget {
       ),
       body: favoritePalettes.isEmpty
           ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.favorite_border, size: 80, color: Colors.grey[600]),
-                  const SizedBox(height: 16),
-                  Text(
-                    'لم تقم بحفظ أي لوحات بعد', // سيتم ترجمتها لاحقاً
-                    style: TextStyle(color: Colors.grey[500], fontSize: 16),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.favorite_outline,
+                      size: 80,
+                      color: Colors.grey[700],
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      l10n.favoritesEmptyTitle,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      l10n.favoritesEmptySubtitle,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             )
           : ListView.builder(
@@ -41,8 +56,9 @@ class FavoritesScreen extends ConsumerWidget {
                 return FavoritePaletteCard(
                   palette: palette,
                   onRemove: () {
-                    // استدعاء دالة الحذف من الـ controller
-                    ref.read(favoritesProvider.notifier).removePalette(palette.id);
+                    ref
+                        .read(favoritesProvider.notifier)
+                        .removePalette(palette.id);
                   },
                 );
               },
