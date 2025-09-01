@@ -1,4 +1,5 @@
 import 'package:ai_palette_generator/controllers/page_index_provider.dart';
+import 'package:ai_palette_generator/views/screens/upload_screen.dart';
 import 'package:ai_palette_generator/views/widgets/option_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -49,6 +50,10 @@ class HomeScreen extends ConsumerWidget {
                       icon: Icons.image_outlined,
                       color: Colors.greenAccent,
                       onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const UploadScreen()),
+                        );
                       },
                     ),
                     OptionCard(

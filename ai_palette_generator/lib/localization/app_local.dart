@@ -50,6 +50,19 @@ class AppLocal {
     'aiDescriptionLabel': 'أو صف تصميمك (AI)',
     'aiDescriptionHint': 'مثال: غروب الشمس على الشاطئ...',
     'generateFromDescription': 'ولّد من الوصف',
+    'uploadScreenTitle': 'استخراج الألوان من صورة',
+    'uploadSelectImage': 'اختر صورة من المعرض',
+    'uploadTakePhoto': 'التقط صورة بالكاميرا',
+    'uploadInstructions': 'اختر صورة لتحليلها واستخراج لوحة ألوان مميزة منها.',
+    'uploadAnalyzing': 'جاري تحليل الصورة...',
+    'uploadError': 'حدث خطأ أثناء معالجة الصورة.',
+    'dominantColor': 'اللون الأساسي المقترح',
+    'extractedColors': 'لوحة الألوان المستخرجة',
+    'suggestedPalette': 'تحليل الذكاء الاصطناعي',
+    'primary': 'اللون الأساسي (للعناصر الهامة)',
+    'secondary': 'اللون الثانوي (للعناصر الداعمة)',
+    'background': 'لون الخلفية (للمساحات الفارغة)',
+    'accent': 'لون مميز (للفت الانتباه)',
   };
 
   // --- ENGLISH ---
@@ -94,6 +107,20 @@ class AppLocal {
     'aiDescriptionLabel': 'Or describe your design (AI)',
     'aiDescriptionHint': 'e.g., sunset on a beach...',
     'generateFromDescription': 'Generate from Description',
+    'uploadScreenTitle': 'Extract Colors from Image',
+    'uploadSelectImage': 'Select from Gallery',
+    'uploadTakePhoto': 'Take a Photo',
+    'uploadInstructions':
+        'Choose an image to analyze and extract a unique color palette.',
+    'uploadAnalyzing': 'Analyzing image...',
+    'uploadError': 'An error occurred while processing the image.',
+    'dominantColor': 'Dominant Color',
+    'extractedColors': 'Extracted Colors',
+    'suggestedPalette': 'Suggested App Palette',
+    'primary': 'Primary',
+    'secondary': 'Secondary',
+    'background': 'Background',
+    'accent': 'Accent',
   };
 
   static final Map<String, Map<String, String>> _localizedValues = {
@@ -176,6 +203,29 @@ class AppLocal {
       _localizedValues[locale.languageCode]!['aiDescriptionHint']!;
   String get generateFromDescription =>
       _localizedValues[locale.languageCode]!['generateFromDescription']!;
+  String get uploadScreenTitle =>
+      _localizedValues[locale.languageCode]!['uploadScreenTitle']!;
+  String get uploadSelectImage =>
+      _localizedValues[locale.languageCode]!['uploadSelectImage']!;
+  String get uploadTakePhoto =>
+      _localizedValues[locale.languageCode]!['uploadTakePhoto']!;
+  String get uploadInstructions =>
+      _localizedValues[locale.languageCode]!['uploadInstructions']!;
+  String get uploadAnalyzing =>
+      _localizedValues[locale.languageCode]!['uploadAnalyzing']!;
+  String get uploadError =>
+      _localizedValues[locale.languageCode]!['uploadError']!;
+  String get dominantColor =>
+      _localizedValues[locale.languageCode]!['dominantColor']!;
+  String get extractedColors =>
+      _localizedValues[locale.languageCode]!['extractedColors']!;
+  String get suggestedPalette =>
+      _localizedValues[locale.languageCode]!['suggestedPalette']!;
+  String get primary => _localizedValues[locale.languageCode]!['primary']!;
+  String get secondary => _localizedValues[locale.languageCode]!['secondary']!;
+  String get background =>
+      _localizedValues[locale.languageCode]!['background']!;
+  String get accent => _localizedValues[locale.languageCode]!['accent']!;
 }
 
 // Delegate class
