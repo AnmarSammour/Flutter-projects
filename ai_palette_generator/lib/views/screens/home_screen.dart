@@ -14,8 +14,6 @@ class HomeScreen extends ConsumerWidget {
     final l10n = AppLocal.of(context);
     final theme = Theme.of(context);
 
-    // --- قائمة البطاقات ---
-    // تعريف البيانات في قائمة يجعل الكود أنظف وأسهل للتعديل
     final List<Map<String, dynamic>> options = [
       {
         'title': l10n.homeGeneratePaletteTitle,
@@ -29,14 +27,22 @@ class HomeScreen extends ConsumerWidget {
         'subtitle': l10n.homeUploadImageSubtitle,
         'icon': Icons.image_outlined,
         'color': Colors.greenAccent,
-        'onTap': () => Navigator.push(context, MaterialPageRoute(builder: (context) => const UploadScreen())),
+        'onTap': () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const UploadScreen()),
+        ),
       },
       {
         'title': l10n.homeGradientGeneratorTitle,
         'subtitle': l10n.homeGradientGeneratorSubtitle,
         'icon': Icons.gradient_outlined,
         'color': Colors.purpleAccent,
-        'onTap': () => Navigator.push(context, MaterialPageRoute(builder: (context) => const GradientGeneratorScreen())),
+        'onTap': () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const GradientGeneratorScreen(),
+          ),
+        ),
       },
       {
         'title': l10n.homeFavoritesTitle,
@@ -54,25 +60,23 @@ class HomeScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // --- قسم العنوان ---
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 24.0),
                 child: Text(
                   l10n.appTitle,
-                  style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
 
-              // --- التصحيح الجذري هنا ---
-              // استخدام Expanded مع GridView.builder
               Expanded(
                 child: GridView.builder(
-                  // لا حاجة لـ controller أو shrinkWrap
                   itemCount: options.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1, // <-- الأهم: عمود واحد فقط، ليتصرف كقائمة
-                    mainAxisSpacing: 16, // مسافة بين العناصر
-                    childAspectRatio: 3.5, // نسبة العرض إلى الارتفاع للبطاقة
+                    crossAxisCount: 1,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 3.5,
                   ),
                   itemBuilder: (context, index) {
                     final option = options[index];

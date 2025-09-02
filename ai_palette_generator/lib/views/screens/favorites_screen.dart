@@ -1,9 +1,13 @@
-import 'package:ai_palette_generator/controllers/favorites_controller.dart';
-import 'package:ai_palette_generator/localization/app_local.dart';
-import 'package:ai_palette_generator/views/widgets/favorite_palette_card.dart';
+import 'package:ai_palette_generator/models/color_palette.dart';
+import 'package:ai_palette_generator/models/gradient_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:ai_palette_generator/controllers/favorites_controller.dart';
+import 'package:ai_palette_generator/controllers/gradient_favorites_controller.dart';
+import 'package:ai_palette_generator/localization/app_local.dart';
+import 'package:ai_palette_generator/views/screens/gradient_generator_screen.dart';
+import 'package:ai_palette_generator/views/widgets/favorite_palette_card.dart';
+import 'package:ai_palette_generator/views/widgets/favorite_gradient_card.dart'; 
 class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
 
@@ -11,56 +15,61 @@ class FavoritesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocal.of(context);
     final favoritePalettes = ref.watch(favoritesProvider);
+    final favoriteGradients = ref.watch(gradientFavoritesProvider);
+
+    final allFavorites = [...favoritePalettes, ...favoriteGradients];
+    allFavorites.sort((a, b) {
+      String aId = (a is ColorPalette)
+          ? a.id
+          : (a is GradientPalette)
+          ? a.id
+          : '';
+      String bId = (b is ColorPalette)
+          ? b.id
+          : (b is GradientPalette)
+          ? b.id
+          : '';
+      return bId.compareTo(aId);
+    });
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.navFavorites),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
+        // ...
       ),
-      body: favoritePalettes.isEmpty
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.favorite_outline,
-                      size: 80,
-                      color: Colors.grey[700],
-                    ),
-                    const SizedBox(height: 24),
-                    Text(
-                      l10n.favoritesEmptyTitle,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.favoritesEmptySubtitle,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyLarge?.copyWith(color: Colors.grey[500]),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-            )
+      body: allFavorites.isEmpty
+          ? Center(/* ... واجهة المستخدم الفارغة ... */)
           : ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              itemCount: favoritePalettes.length,
+              itemCount: allFavorites.length,
               itemBuilder: (context, index) {
-                final palette = favoritePalettes[index];
-                return FavoritePaletteCard(
-                  palette: palette,
-                  onRemove: () {
-                    ref
+                final item = allFavorites[index];
+
+                if (item is ColorPalette) {
+                  return FavoritePaletteCard(
+                    palette: item,
+                    onRemove: () => ref
                         .read(favoritesProvider.notifier)
-                        .removePalette(palette.id);
-                  },
-                );
+                        .removePalette(item.id),
+                  );
+                } else if (item is GradientPalette) {
+                  return FavoriteGradientCard(
+                    gradient: item,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              GradientGeneratorScreen(existingGradient: item),
+                        ),
+                      );
+                    },
+                    onRemove: () => ref
+                        .read(gradientFavoritesProvider.notifier)
+                        .removeGradient(item.id),
+                  );
+                }
+                return const SizedBox.shrink();
               },
             ),
     );

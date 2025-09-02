@@ -4,7 +4,7 @@ import 'package:ai_palette_generator/localization/app_local.dart';
 
 class ColorStrip extends StatelessWidget {
   final Color color;
-  final double? height; // جعله اختيارياً
+  final double? height;
 
   const ColorStrip({super.key, required this.color, this.height});
 

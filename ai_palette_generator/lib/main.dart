@@ -1,3 +1,5 @@
+import 'package:ai_palette_generator/models/gradient_alignment_type.dart';
+import 'package:ai_palette_generator/models/gradient_palette.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ai_palette_generator/views/screens/main_wrapper.dart';
@@ -13,7 +15,11 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(ColorPaletteAdapter());
   Hive.registerAdapter(ColorAdapter());
-  await Hive.openBox<ColorPalette>('favorites');
+  Hive.registerAdapter(GradientPaletteAdapter());
+  Hive.registerAdapter(GradientAlignmentTypeAdapter());
+
+  await Hive.openBox<ColorPalette>('palettes_box');
+  await Hive.openBox<GradientPalette>('gradients_box');
   runApp(const ProviderScope(child: MyApp()));
 }
 

@@ -3,11 +3,10 @@ import 'package:hive/hive.dart';
 
 class ColorAdapter extends TypeAdapter<Color> {
   @override
-  final int typeId = 1; // أعطه ID فريد
+  final int typeId = 1; 
 
   @override
   Color read(BinaryReader reader) {
-    // اقرأ القيمة الرقمية للون
     final value = reader.readInt();
     return Color(value);
   }

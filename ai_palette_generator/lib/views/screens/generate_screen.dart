@@ -64,7 +64,6 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
     final paletteState = ref.watch(paletteGeneratorProvider);
     final l10n = AppLocal.of(context);
 
-    // التصحيح: تمت إزالة الشرطة السفلية من اسم الدالة المحلية
     String translateIndustry(IndustryType type) {
       switch (type) {
         case IndustryType.islamic: return l10n.industryIslamic;
@@ -75,6 +74,27 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
         case IndustryType.food: return l10n.industryFood;
       }
     }
+
+    final paletteView = paletteState.when(
+      data: (palette) => Column(
+        children: palette.colors.map((c) => Expanded(child: ColorStrip(color: c))).toList(),
+      ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text('${l10n.errorFailedToLoad}\n\n${err.toString()}', textAlign: TextAlign.center),
+        ),
+      ),
+    );
+
+    final controlPanelView = Container(
+      padding: const EdgeInsets.all(16.0),
+      color: Theme.of(context).cardColor,
+      child: SingleChildScrollView(
+        child: _buildControlPanel(l10n, translateIndustry),
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -96,54 +116,51 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: paletteState.when(
-              data: (palette) => Column(children: palette.colors.map((c) => ColorStrip(color: c)).toList()),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text('${l10n.errorFailedToLoad}\n\n${err.toString()}', textAlign: TextAlign.center),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // إذا كانت الشاشة عريضة (مثل الوضع الأفقي أو تابلت)
+          if (constraints.maxWidth > 600) {
+            return Row(
+              children: [
+                Expanded(flex: 3, child: paletteView),
+                Container(
+                  width: 320, // عرض ثابت للوحة التحكم
+                  child: controlPanelView,
                 ),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            color: Theme.of(context).cardColor,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(l10n.colorCountLabel, style: Theme.of(context).textTheme.titleMedium),
-                      DropdownButton<int>(
-                        value: _colorCount,
-                        items: [2, 3, 4, 5].map((v) => DropdownMenuItem(value: v, child: Text(v.toString()))).toList(),
-                        onChanged: (newValue) {
-                          if (newValue != null) setState(() => _colorCount = newValue);
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  _buildControlPanel(l10n, translateIndustry),
-                ],
-              ),
-            ),
-          ),
-        ],
+              ],
+            );
+          } else {
+            // التصميم الأصلي للشاشات الطولية (الهواتف)
+            return Column(
+              children: [
+                Expanded(child: paletteView),
+                controlPanelView,
+              ],
+            );
+          }
+        },
       ),
     );
   }
 
   Widget _buildControlPanel(AppLocal l10n, String Function(IndustryType) translate) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(l10n.colorCountLabel, style: Theme.of(context).textTheme.titleMedium),
+            DropdownButton<int>(
+              value: _colorCount,
+              items: [2, 3, 4, 5].map((v) => DropdownMenuItem(value: v, child: Text(v.toString()))).toList(),
+              onChanged: (newValue) {
+                if (newValue != null) setState(() => _colorCount = newValue);
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
         TextField(
           controller: _descriptionController,
           decoration: InputDecoration(

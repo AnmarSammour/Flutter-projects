@@ -1,131 +1,84 @@
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:ai_palette_generator/controllers/gradient_favorites_controller.dart';
 import 'package:ai_palette_generator/localization/app_local.dart';
 import 'package:ai_palette_generator/models/gradient_alignment_type.dart';
+import 'package:ai_palette_generator/models/gradient_palette.dart';
 
-class GradientGeneratorScreen extends StatefulWidget {
-  const GradientGeneratorScreen({super.key});
+class GradientGeneratorScreen extends ConsumerStatefulWidget {
+  final GradientPalette? existingGradient;
+
+  const GradientGeneratorScreen({super.key, this.existingGradient});
 
   @override
-  State<GradientGeneratorScreen> createState() =>
+  ConsumerState<GradientGeneratorScreen> createState() =>
       _GradientGeneratorScreenState();
 }
 
-class _GradientGeneratorScreenState extends State<GradientGeneratorScreen> {
-  List<Color> _gradientColors = [Colors.deepPurple, Colors.pinkAccent];
-  GradientAlignmentType _alignmentType = GradientAlignmentType.linearLeftRight;
+class _GradientGeneratorScreenState
+    extends ConsumerState<GradientGeneratorScreen> {
+  late List<Color> _gradientColors;
+  late GradientAlignmentType _alignmentType;
+  late String _gradientId;
+  bool _isFavorite = false;
 
-  Future<void> _editColor(int index) async {
-    final Color? newColor = await showColorPickerDialog(
-      context,
-      _gradientColors[index],
-      pickersEnabled: const {
-        ColorPickerType.both: true,
-        ColorPickerType.wheel: true,
-      },
-    );
-
-    if (newColor != null && mounted) {
-      setState(() {
-        final updatedColors = List<Color>.from(_gradientColors);
-        updatedColors[index] = newColor;
-        _gradientColors = updatedColors;
-      });
-    }
-  }
-
-  Future<void> _addNewColor() async {
-    final Color? newColor = await showColorPickerDialog(
-      context,
-      Colors.green,
-      pickersEnabled: const {
-        ColorPickerType.both: true,
-        ColorPickerType.wheel: true,
-      },
-    );
-    if (newColor != null && mounted) {
-      setState(() {
-        _gradientColors = [..._gradientColors, newColor];
-      });
-    }
-  }
-
-  void _copyCssCode() {
-    final colorsString = _gradientColors.map((c) => '#${c.hex}').join(', ');
-    String cssCode;
-
-    if (_alignmentType == GradientAlignmentType.radial) {
-      cssCode = 'background: radial-gradient(circle, $colorsString);';
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingGradient != null) {
+      final gradient = widget.existingGradient!;
+      _gradientColors = List.from(gradient.colors);
+      _alignmentType = gradient.alignmentType;
+      _gradientId = gradient.id;
     } else {
-      String direction = 'to right';
-      switch (_alignmentType) {
-        case GradientAlignmentType.linearTopBottom:
-          direction = 'to bottom';
-          break;
-        case GradientAlignmentType.linearTopLeftBottomRight:
-          direction = 'to bottom right';
-          break;
-        case GradientAlignmentType.linearBottomLeftTopRight:
-          direction = 'to top right';
-          break;
-        default:
-          direction = 'to right';
-      }
-      cssCode = 'background: linear-gradient($direction, $colorsString);';
-    }
-
-    Clipboard.setData(ClipboardData(text: cssCode));
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(AppLocal.of(context).gradientCodeCopied)),
-    );
-  }
-
-  Gradient _buildGradient() {
-    switch (_alignmentType) {
-      case GradientAlignmentType.radial:
-        return RadialGradient(colors: _gradientColors);
-      case GradientAlignmentType.linearTopBottom:
-        return LinearGradient(
-          colors: _gradientColors,
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        );
-      case GradientAlignmentType.linearTopLeftBottomRight:
-        return LinearGradient(
-          colors: _gradientColors,
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        );
-      case GradientAlignmentType.linearBottomLeftTopRight:
-        return LinearGradient(
-          colors: _gradientColors,
-          begin: Alignment.bottomLeft,
-          end: Alignment.topRight,
-        );
-      case GradientAlignmentType.linearLeftRight:
-      return LinearGradient(
-          colors: _gradientColors,
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        );
+      _gradientColors = [Colors.deepPurple, Colors.pinkAccent];
+      _alignmentType = GradientAlignmentType.linearLeftRight;
+      _gradientId = DateTime.now().millisecondsSinceEpoch.toString();
     }
   }
 
-  String _translateAlignment(GradientAlignmentType type, AppLocal l10n) {
-    switch (type) {
-      case GradientAlignmentType.radial:
-        return l10n.alignRadial;
-      case GradientAlignmentType.linearLeftRight:
-        return l10n.alignLinearLeftRight;
-      case GradientAlignmentType.linearTopBottom:
-        return l10n.alignLinearTopBottom;
-      case GradientAlignmentType.linearTopLeftBottomRight:
-        return l10n.alignLinearTopLeftBottomRight;
-      case GradientAlignmentType.linearBottomLeftTopRight:
-        return l10n.alignLinearBottomLeftTopRight;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _checkIfFavorite();
+  }
+
+  void _checkIfFavorite() {
+    final isFav = ref
+        .read(gradientFavoritesProvider.notifier)
+        .isFavorite(_gradientId);
+    if (mounted && isFav != _isFavorite) {
+      setState(() {
+        _isFavorite = isFav;
+      });
     }
   }
+
+  void _toggleFavorite() {
+    final notifier = ref.read(gradientFavoritesProvider.notifier);
+    if (_isFavorite) {
+      notifier.removeGradient(_gradientId);
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("تم الحذف من المفضلة")));
+    } else {
+      final newGradient = GradientPalette(
+        id: _gradientId,
+        colors: _gradientColors,
+        alignmentType: _alignmentType,
+      );
+      notifier.addGradient(newGradient);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocal.of(context).gradientSaved)),
+      );
+    }
+    setState(() {
+      _isFavorite = !_isFavorite;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,13 +92,12 @@ class _GradientGeneratorScreenState extends State<GradientGeneratorScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_border),
+            icon: Icon(
+              _isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: _isFavorite ? Colors.redAccent : null,
+            ),
             tooltip: l10n.gradientSave,
-            onPressed: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(l10n.gradientSaved)));
-            },
+            onPressed: _toggleFavorite,
           ),
           IconButton(
             icon: const Icon(Icons.code),
@@ -186,9 +138,8 @@ class _GradientGeneratorScreenState extends State<GradientGeneratorScreen> {
                       );
                     }).toList(),
                     onChanged: (newValue) {
-                      if (newValue != null) {
+                      if (newValue != null)
                         setState(() => _alignmentType = newValue);
-                      }
                     },
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -218,6 +169,103 @@ class _GradientGeneratorScreenState extends State<GradientGeneratorScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _editColor(int index) async {
+    final Color? newColor = await showColorPickerDialog(
+      context,
+      _gradientColors[index],
+    );
+    if (newColor != null && mounted) {
+      setState(() {
+        final updatedColors = List<Color>.from(_gradientColors);
+        updatedColors[index] = newColor;
+        _gradientColors = updatedColors;
+      });
+    }
+  }
+
+  Future<void> _addNewColor() async {
+    final Color? newColor = await showColorPickerDialog(context, Colors.green);
+    if (newColor != null && mounted) {
+      setState(() {
+        _gradientColors = [..._gradientColors, newColor];
+      });
+    }
+  }
+
+  void _copyCssCode() {
+    final colorsString = _gradientColors.map((c) => '#${c.hex}').join(', ');
+    String cssCode;
+    if (_alignmentType == GradientAlignmentType.radial) {
+      cssCode = 'background: radial-gradient(circle, $colorsString);';
+    } else {
+      String direction = 'to right';
+      switch (_alignmentType) {
+        case GradientAlignmentType.linearTopBottom:
+          direction = 'to bottom';
+          break;
+        case GradientAlignmentType.linearTopLeftBottomRight:
+          direction = 'to bottom right';
+          break;
+        case GradientAlignmentType.linearBottomLeftTopRight:
+          direction = 'to top right';
+          break;
+        default:
+          direction = 'to right';
+      }
+      cssCode = 'background: linear-gradient($direction, $colorsString);';
+    }
+    Clipboard.setData(ClipboardData(text: cssCode));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocal.of(context).gradientCodeCopied)),
+    );
+  }
+
+  Gradient _buildGradient() {
+    switch (_alignmentType) {
+      case GradientAlignmentType.radial:
+        return RadialGradient(colors: _gradientColors);
+      case GradientAlignmentType.linearTopBottom:
+        return LinearGradient(
+          colors: _gradientColors,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        );
+      case GradientAlignmentType.linearTopLeftBottomRight:
+        return LinearGradient(
+          colors: _gradientColors,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        );
+      case GradientAlignmentType.linearBottomLeftTopRight:
+        return LinearGradient(
+          colors: _gradientColors,
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        );
+      case GradientAlignmentType.linearLeftRight:
+        return LinearGradient(
+          colors: _gradientColors,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        );
+    }
+  }
+
+  String _translateAlignment(GradientAlignmentType type, AppLocal l10n) {
+    switch (type) {
+      case GradientAlignmentType.radial:
+        return l10n.alignRadial;
+      case GradientAlignmentType.linearLeftRight:
+        return l10n.alignLinearLeftRight;
+      case GradientAlignmentType.linearTopBottom:
+        return l10n.alignLinearTopBottom;
+      case GradientAlignmentType.linearTopLeftBottomRight:
+        return l10n.alignLinearTopLeftBottomRight;
+      case GradientAlignmentType.linearBottomLeftTopRight:
+        return l10n.alignLinearBottomLeftTopRight;
+    }
   }
 
   Widget _buildColorBox(int index, AppLocal l10n) {
@@ -280,7 +328,7 @@ class _GradientGeneratorScreenState extends State<GradientGeneratorScreen> {
         width: 60,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.white38, style: BorderStyle.solid),
+          border: Border.all(color: Colors.white38),
         ),
         child: const Icon(Icons.add, color: Colors.white70),
       ),
