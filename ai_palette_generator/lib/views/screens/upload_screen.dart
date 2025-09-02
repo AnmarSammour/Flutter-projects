@@ -154,8 +154,8 @@ class UploadScreen extends ConsumerWidget {
     final l10n = AppLocal.of(context);
     final colors = result.palette;
 
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
+    final extractedColorsWidget = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           l10n.extractedColors,
@@ -172,7 +172,12 @@ class UploadScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const SizedBox(height: 24),
+      ],
+    );
+
+    final analysisWidget = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
         Text(
           l10n.suggestedPalette,
           style: Theme.of(context).textTheme.titleLarge,
@@ -192,6 +197,36 @@ class UploadScreen extends ConsumerWidget {
           ),
         ),
       ],
+    );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth > 650) {
+          return Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 2, child: extractedColorsWidget),
+                const SizedBox(width: 24),
+                Expanded(
+                  flex: 3,
+                  child: SingleChildScrollView(child: analysisWidget),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return ListView(
+            padding: const EdgeInsets.all(16.0),
+            children: [
+              extractedColorsWidget,
+              const SizedBox(height: 24),
+              analysisWidget,
+            ],
+          );
+        }
+      },
     );
   }
 }

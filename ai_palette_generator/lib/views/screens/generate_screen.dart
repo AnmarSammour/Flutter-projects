@@ -39,7 +39,8 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
             onColorChanged: (color) {
               setState(() {
                 _baseColor = color;
-                _hexController.text = '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
+                _hexController.text =
+                    '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
               });
             },
           ),
@@ -50,7 +51,9 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
             onPressed: () {
               Navigator.of(context).pop();
               if (_baseColor != null) {
-                ref.read(paletteGeneratorProvider.notifier).generatePaletteFromBase(_baseColor!, count: _colorCount);
+                ref
+                    .read(paletteGeneratorProvider.notifier)
+                    .generatePaletteFromBase(_baseColor!, count: _colorCount);
               }
             },
           ),
@@ -66,24 +69,35 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
 
     String translateIndustry(IndustryType type) {
       switch (type) {
-        case IndustryType.islamic: return l10n.industryIslamic;
-        case IndustryType.educational: return l10n.industryEducational;
-        case IndustryType.banking: return l10n.industryBanking;
-        case IndustryType.tech: return l10n.industryTech;
-        case IndustryType.health: return l10n.industryHealth;
-        case IndustryType.food: return l10n.industryFood;
+        case IndustryType.islamic:
+          return l10n.industryIslamic;
+        case IndustryType.educational:
+          return l10n.industryEducational;
+        case IndustryType.banking:
+          return l10n.industryBanking;
+        case IndustryType.tech:
+          return l10n.industryTech;
+        case IndustryType.health:
+          return l10n.industryHealth;
+        case IndustryType.food:
+          return l10n.industryFood;
       }
     }
 
     final paletteView = paletteState.when(
       data: (palette) => Column(
-        children: palette.colors.map((c) => Expanded(child: ColorStrip(color: c))).toList(),
+        children: palette.colors
+            .map((c) => Expanded(child: ColorStrip(color: c)))
+            .toList(),
       ),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text('${l10n.errorFailedToLoad}\n\n${err.toString()}', textAlign: TextAlign.center),
+          child: Text(
+            '${l10n.errorFailedToLoad}\n\n${err.toString()}',
+            textAlign: TextAlign.center,
+          ),
         ),
       ),
     );
@@ -108,29 +122,38 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
               tooltip: l10n.savePaletteButton,
               onPressed: () {
                 ref.read(favoritesProvider.notifier).addPalette(palette);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.paletteSaved)));
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(l10n.paletteSaved)));
               },
             ),
-            loading: () => const Center(child: Padding(padding: EdgeInsets.all(16.0), child: SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2)))),
+            loading: () => const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
             error: (_, __) => const SizedBox.shrink(),
           ),
         ],
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
-          // إذا كانت الشاشة عريضة (مثل الوضع الأفقي أو تابلت)
           if (constraints.maxWidth > 600) {
             return Row(
               children: [
                 Expanded(flex: 3, child: paletteView),
                 Container(
-                  width: 320, // عرض ثابت للوحة التحكم
+                  width: 320,
                   child: controlPanelView,
                 ),
               ],
             );
           } else {
-            // التصميم الأصلي للشاشات الطولية (الهواتف)
             return Column(
               children: [
                 Expanded(child: paletteView),
@@ -143,17 +166,28 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
     );
   }
 
-  Widget _buildControlPanel(AppLocal l10n, String Function(IndustryType) translate) {
+  Widget _buildControlPanel(
+    AppLocal l10n,
+    String Function(IndustryType) translate,
+  ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(l10n.colorCountLabel, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              l10n.colorCountLabel,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             DropdownButton<int>(
               value: _colorCount,
-              items: [2, 3, 4, 5].map((v) => DropdownMenuItem(value: v, child: Text(v.toString()))).toList(),
+              items: [2, 3, 4, 5]
+                  .map(
+                    (v) =>
+                        DropdownMenuItem(value: v, child: Text(v.toString())),
+                  )
+                  .toList(),
               onChanged: (newValue) {
                 if (newValue != null) setState(() => _colorCount = newValue);
               },
@@ -176,10 +210,12 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
             icon: const Icon(Icons.auto_awesome),
             label: Text(l10n.generateFromDescription),
             onPressed: () {
-              ref.read(paletteGeneratorProvider.notifier).generatePaletteFromText(
-                _descriptionController.text,
-                count: _colorCount,
-              );
+              ref
+                  .read(paletteGeneratorProvider.notifier)
+                  .generatePaletteFromText(
+                    _descriptionController.text,
+                    count: _colorCount,
+                  );
             },
           ),
         ),
@@ -193,19 +229,39 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
                   labelText: l10n.baseColorLabel,
                   hintText: '#RRGGBB',
                   border: const OutlineInputBorder(),
-                  prefixIcon: _baseColor != null ? Padding(padding: const EdgeInsets.all(8.0), child: CircleAvatar(backgroundColor: _baseColor, radius: 12)) : null,
+                  prefixIcon: _baseColor != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            backgroundColor: _baseColor,
+                            radius: 12,
+                          ),
+                        )
+                      : null,
                 ),
                 onSubmitted: (value) {
                   try {
-                    final color = Color(int.parse(value.replaceFirst('#', '0xff')));
-                    setState(() { _baseColor = color; });
-                    ref.read(paletteGeneratorProvider.notifier).generatePaletteFromBase(color, count: _colorCount);
-                  } catch (e) {/* ignore */}
+                    final color = Color(
+                      int.parse(value.replaceFirst('#', '0xff')),
+                    );
+                    setState(() {
+                      _baseColor = color;
+                    });
+                    ref
+                        .read(paletteGeneratorProvider.notifier)
+                        .generatePaletteFromBase(color, count: _colorCount);
+                  } catch (e) {
+                    /* ignore */
+                  }
                 },
               ),
             ),
             const SizedBox(width: 8),
-            IconButton(icon: const Icon(Icons.color_lens_outlined), onPressed: _openColorPicker, tooltip: l10n.pickColorButton),
+            IconButton(
+              icon: const Icon(Icons.color_lens_outlined),
+              onPressed: _openColorPicker,
+              tooltip: l10n.pickColorButton,
+            ),
           ],
         ),
         const Divider(height: 24, thickness: 1),
@@ -214,11 +270,20 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
           hint: Text(l10n.industryHintText),
           isExpanded: true,
           decoration: const InputDecoration(border: OutlineInputBorder()),
-          items: IndustryType.values.map((type) => DropdownMenuItem(value: type, child: Text(translate(type)))).toList(),
+          items: IndustryType.values
+              .map(
+                (type) =>
+                    DropdownMenuItem(value: type, child: Text(translate(type))),
+              )
+              .toList(),
           onChanged: (newValue) {
             if (newValue != null) {
-              setState(() { _selectedIndustry = newValue; });
-              ref.read(paletteGeneratorProvider.notifier).generatePaletteForIndustry(newValue);
+              setState(() {
+                _selectedIndustry = newValue;
+              });
+              ref
+                  .read(paletteGeneratorProvider.notifier)
+                  .generatePaletteForIndustry(newValue);
             }
           },
         ),
@@ -229,9 +294,13 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
             icon: const Icon(Icons.shuffle),
             label: Text(l10n.refreshButton),
             onPressed: () {
-              ref.read(paletteGeneratorProvider.notifier).generateRandomPalette(count: _colorCount);
+              ref
+                  .read(paletteGeneratorProvider.notifier)
+                  .generateRandomPalette(count: _colorCount);
             },
-            style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 12)),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+            ),
           ),
         ),
       ],

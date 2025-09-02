@@ -35,11 +35,12 @@ class FavoritePaletteCard extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Wrap(
                     spacing: 8.0,
-                    runSpacing: 4.0,
+                    runSpacing: 4.0, 
                     children: palette.colors.map((color) {
                       final hexCode =
                           '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
@@ -49,12 +50,16 @@ class FavoritePaletteCard extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('${l10n.copiedMessage}$hexCode'),
+                              duration: const Duration(seconds: 1),
                             ),
                           );
                         },
                         child: Text(
                           hexCode,
-                          style: TextStyle(color: Colors.grey[400]),
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 12,
+                          ),
                         ),
                       );
                     }).toList(),

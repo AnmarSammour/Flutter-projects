@@ -64,19 +64,19 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(vertical: 24.0),
                 child: Text(
                   l10n.appTitle,
-                  style: theme.textTheme.headlineMedium?.copyWith(
+                  style: theme.textTheme.headlineLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-
               Expanded(
                 child: GridView.builder(
                   itemCount: options.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 1,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 3.5,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 500.0, 
+                    mainAxisExtent: 120.0, 
+                    mainAxisSpacing: 16.0,
+                    crossAxisSpacing: 16.0,
                   ),
                   itemBuilder: (context, index) {
                     final option = options[index];
