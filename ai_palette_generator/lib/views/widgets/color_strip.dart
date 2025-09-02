@@ -17,7 +17,6 @@ class ColorStrip extends StatelessWidget {
         ? Colors.black
         : Colors.white;
 
-    // --- التصحيح: إزالة Expanded ---
     return GestureDetector(
       onTap: () {
         Clipboard.setData(ClipboardData(text: hexCode));
@@ -29,8 +28,8 @@ class ColorStrip extends StatelessWidget {
         );
       },
       child: Container(
-        height: height, // استخدام الارتفاع إذا تم تحديده
-        width: double.infinity, // تأكد من أنه يملأ العرض
+        height: height, 
+        width: double.infinity,
         color: color,
         child: Center(
           child: Text(

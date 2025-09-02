@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart'
-    as http; // هذه المكتبة لا تزال مستخدمة للتوليد العشوائي ومن لون أساسي
+    as http; 
 import 'package:ai_palette_generator/models/color_palette.dart';
 import 'package:ai_palette_generator/models/industry_type.dart';
 import 'package:ai_palette_generator/services/industry_palette_service.dart';

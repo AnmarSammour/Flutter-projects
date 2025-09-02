@@ -35,10 +35,9 @@ class FavoritesScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.navFavorites),
-        // ...
       ),
       body: allFavorites.isEmpty
-          ? Center(/* ... واجهة المستخدم الفارغة ... */)
+          ? Center()
           : ListView.builder(
               padding: const EdgeInsets.all(16.0),
               itemCount: allFavorites.length,

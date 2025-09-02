@@ -13,7 +13,6 @@ class ColorAdapter extends TypeAdapter<Color> {
 
   @override
   void write(BinaryWriter writer, Color obj) {
-    // اكتب القيمة الرقمية للون
     writer.writeInt(obj.value);
   }
 }

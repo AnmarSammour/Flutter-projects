@@ -84,6 +84,16 @@ class AppLocal {
     'alignLinearTopBottom': 'خطي (من الأعلى للأسفل)',
     'alignLinearTopLeftBottomRight': 'خطي (مائل من الأعلى يسار)',
     'alignLinearBottomLeftTopRight': 'خطي (مائل من الأسفل يسار)',
+    'imageTypeTitle': 'ما هو نوع الصورة؟',
+    'imageTypePhoto': 'صورة فوتوغرافية',
+    'imageTypePhotoDesc': 'لتحليل الألوان السائدة في مشهد أو كائن.',
+    'imageTypeLogo': 'شعار (Logo)',
+    'imageTypeLogoDesc': 'لتحليل دقيق لألوان الهوية البصرية.',
+    'logoContextLabel': 'صف استخدام الشعار (اختياري)',
+    'logoContextHint': 'مثال: تطبيق بنكي، متجر إلكتروني...',
+    'startOver': 'البدء من جديد',
+    'logoCritiqueTitle': 'تقييم الشعار',
+    'colorAnalysisTitle': 'تحليل الألوان',
   };
 
   // --- ENGLISH ---
@@ -163,6 +173,16 @@ class AppLocal {
     'alignLinearTopBottom': 'Linear (Top to Bottom)',
     'alignLinearTopLeftBottomRight': 'Linear (Top-Left to Bottom-Right)',
     'alignLinearBottomLeftTopRight': 'Linear (Bottom-Left to Top-Right)',
+    'imageTypeTitle': 'What is the image type?',
+    'imageTypePhoto': 'Photograph',
+    'imageTypePhotoDesc': 'To analyze dominant colors in a scene or object.',
+    'imageTypeLogo': 'Logo',
+    'imageTypeLogoDesc': 'For precise analysis of brand identity colors.',
+    'logoContextLabel': 'Describe the logo\'s use (optional)',
+    'logoContextHint': 'e.g., banking app, e-commerce store...',
+    'startOver': 'Start Over',
+    'logoCritiqueTitle': 'Logo Critique',
+    'colorAnalysisTitle': 'Color Analysis',
   };
 
   static final Map<String, Map<String, String>> _localizedValues = {
@@ -310,6 +330,25 @@ class AppLocal {
       _localizedValues[locale.languageCode]!['alignLinearTopLeftBottomRight']!;
   String get alignLinearBottomLeftTopRight =>
       _localizedValues[locale.languageCode]!['alignLinearBottomLeftTopRight']!;
+  String get imageTypeTitle =>
+      _localizedValues[locale.languageCode]!['imageTypeTitle']!;
+  String get imageTypePhoto =>
+      _localizedValues[locale.languageCode]!['imageTypePhoto']!;
+  String get imageTypePhotoDesc =>
+      _localizedValues[locale.languageCode]!['imageTypePhotoDesc']!;
+  String get imageTypeLogo =>
+      _localizedValues[locale.languageCode]!['imageTypeLogo']!;
+  String get imageTypeLogoDesc =>
+      _localizedValues[locale.languageCode]!['imageTypeLogoDesc']!;
+  String get logoContextLabel =>
+      _localizedValues[locale.languageCode]!['logoContextLabel']!;
+  String get logoContextHint =>
+      _localizedValues[locale.languageCode]!['logoContextHint']!;
+  String get startOver => _localizedValues[locale.languageCode]!['startOver']!;
+  String get logoCritiqueTitle =>
+      _localizedValues[locale.languageCode]!['logoCritiqueTitle']!;
+  String get colorAnalysisTitle =>
+      _localizedValues[locale.languageCode]!['colorAnalysisTitle']!;
 }
 
 // Delegate class

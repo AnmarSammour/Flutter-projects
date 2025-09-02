@@ -2,17 +2,34 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'api_secrets.dart';
+import 'api_secrets.dart'; 
+
+class ColorAnalysis {
+  final String hex;
+  final Color color;
+  final String name;
+  final String usageSuggestion;
+  final List<Color> shades;
+
+  ColorAnalysis({
+    required this.hex,
+    required this.color,
+    required this.name,
+    required this.usageSuggestion,
+    required this.shades,
+  });
+}
 
 class ImageAnalysisResult {
-  final List<Color> palette;
-  final String analysis;
+  final List<ColorAnalysis> palette;
+  final String? logoCritique; 
 
-  ImageAnalysisResult({required this.palette, required this.analysis});
+  ImageAnalysisResult({required this.palette, this.logoCritique});
 }
 
 class AiPaletteService {
   final GenerativeModel _textModel;
+
   final GenerativeModel _visionModel;
 
   AiPaletteService()
@@ -23,6 +40,9 @@ class AiPaletteService {
       _visionModel = GenerativeModel(
         model: 'gemini-1.5-flash',
         apiKey: geminiApiKey,
+        generationConfig: GenerationConfig(
+          maxOutputTokens: 4096, 
+        ),
       );
 
   Color _hexToColor(String hex) {
@@ -74,24 +94,47 @@ class AiPaletteService {
     );
   }
 
-  Future<ImageAnalysisResult> getPaletteFromImage(
-    Uint8List imageBytes, {
+  Future<ImageAnalysisResult> getPaletteFromImage({
+    required Uint8List imageBytes,
     required String languageCode,
+    required String imageType, 
+    String? contextDescription,
   }) async {
     final String languageName = languageCode == 'ar' ? 'Arabic' : 'English';
 
+    final String logoCritiquePrompt = imageType == 'logo'
+        ? '''
+      "logoCritique": {
+        "isSuitable": A boolean (true/false) indicating if the image is a good logo.
+        "critique": A short, constructive paragraph in **$languageName** that critiques the logo. If it's good, explain why. If it's not (e.g., too complex, poor colors), explain why and provide specific, actionable suggestions for improvement.
+      },
+    '''
+        : '';
+
     final prompt = TextPart('''
-      Analyze this image as an expert UI/UX designer. Your task is to generate a harmonious 5-color palette suitable for a mobile app, based on the image's content, mood, and subject.
+      Analyze this image as an expert brand identity designer and color theorist.
+      The user has specified this image is a: **$imageType**.
+      ${contextDescription != null && contextDescription.isNotEmpty ? "User context: '$contextDescription'." : ""}
 
-      Your response MUST be a single, valid JSON object with two keys:
-      1. "palette": An array of exactly 5 strings, where each string is a hex color code.
-      2. "analysis": A short, one-paragraph string written in **$languageName** explaining why you chose these colors and how they can be used (e.g., for primary buttons, background, text).
-
-      Example response if the language is English:
+      Your response MUST be a single, valid JSON object with the following structure:
       {
-        "palette": ["#1A2B3C", "#D4E5F6", "#FFC107", "#607D8B", "#FFFFFF"],
-        "analysis": "This palette was chosen to reflect the professional atmosphere in the image. The dark blue is ideal as a primary color for buttons, while white provides a clean background. The yellow acts as an accent to draw attention."
+        $logoCritiquePrompt
+        "palette": [
+          // An array of color analysis objects
+        ]
       }
+
+      For the "palette" array, extract the **actual, dominant colors** from the image. For each color, create an object with this structure:
+      {
+        "hex": The hex color code string.
+        "name": A short, descriptive name for the color in **$languageName**.
+        "usageSuggestion": A concise, one-sentence suggestion in **$languageName** on how this color could be used in an app UI, considering the user's context if provided.
+        "shades": An array of exactly 3 hex strings: a darker shade, the original color, and a lighter tint.
+      }
+
+      - **Crucially, if the image type is 'logo'**: Your `logoCritique` must be honest and professional. Assess its simplicity, memorability, and color harmony.
+      - Do NOT invent colors. Extract only what is present.
+      - The entire response must be valid JSON. Do not include any extra text or markdown.
     ''');
 
     final imagePart = DataPart('image/jpeg', imageBytes);
@@ -111,16 +154,35 @@ class AiPaletteService {
           cleanedJsonString,
         );
 
-        final List<dynamic> hexCodes = jsonResponse['palette'];
-        final String analysisText = jsonResponse['analysis'];
+        String? critiqueText;
+        if (jsonResponse.containsKey('logoCritique')) {
+          critiqueText = jsonResponse['logoCritique']['critique'];
+        }
 
-        final colors = hexCodes
-            .map((hex) => _hexToColor(hex.toString()))
-            .toList();
+        final List<dynamic> paletteData = jsonResponse['palette'];
+        final List<ColorAnalysis> analyzedPalette = paletteData.map((
+          colorData,
+        ) {
+          final List<Color> colorShades = (colorData['shades'] as List)
+              .map((hex) => _hexToColor(hex.toString()))
+              .toList();
 
-        return ImageAnalysisResult(palette: colors, analysis: analysisText);
-      } catch (e) {
+          return ColorAnalysis(
+            hex: colorData['hex'],
+            color: _hexToColor(colorData['hex']),
+            name: colorData['name'],
+            usageSuggestion: colorData['usageSuggestion'],
+            shades: colorShades,
+          );
+        }).toList();
+
+        return ImageAnalysisResult(
+          palette: analyzedPalette,
+          logoCritique: critiqueText,
+        );
+      } catch (e, s) {
         debugPrint('Error parsing Gemini vision response: $e');
+        debugPrint('Stacktrace: $s');
         throw Exception('Failed to parse AI response from image.');
       }
     }

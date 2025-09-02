@@ -16,7 +16,6 @@ class FavoriteGradientCard extends StatelessWidget {
     required this.onRemove,
   });
 
-  /// دالة مساعدة لبناء التدرج بناءً على نوع المحاذاة.
   Gradient _buildGradient() {
     switch (gradient.alignmentType) {
       case GradientAlignmentType.radial:
@@ -48,7 +47,6 @@ class FavoriteGradientCard extends StatelessWidget {
     }
   }
 
-  /// دالة لنسخ كود CSS الخاص بالتدرج.
   void _copyCssCode(BuildContext context) {
     final l10n = AppLocal.of(context);
     final colorsString = gradient.colors.map((c) => '#${c.value.toRadixString(16).substring(2)}').join(', ');
@@ -57,7 +55,7 @@ class FavoriteGradientCard extends StatelessWidget {
     if (gradient.alignmentType == GradientAlignmentType.radial) {
       cssCode = 'background: radial-gradient(circle, $colorsString);';
     } else {
-      String direction = 'to right'; // Default
+      String direction = 'to right'; 
       switch (gradient.alignmentType) {
         case GradientAlignmentType.linearTopBottom:
           direction = 'to bottom';
@@ -87,42 +85,36 @@ class FavoriteGradientCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
-      clipBehavior: Clip.antiAlias, // لضمان أن الحواف الدائرية تطبق على كل المحتوى
+      clipBehavior: Clip.antiAlias, 
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: InkWell(
-        onTap: onTap, // عند النقر على البطاقة، يتم تنفيذ الدالة الممررة
+        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. شريط المعاينة الملون
             Container(
               height: 100,
               decoration: BoxDecoration(
                 gradient: _buildGradient(),
               ),
             ),
-            // 2. الشريط السفلي الذي يحتوي على الأزرار
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               color: theme.cardColor.withOpacity(0.8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // اسم التدرج (يمكن تطويره لاحقاً)
                   Text(
-                    l10n.gradientType, // نص مؤقت
+                    l10n.gradientType, 
                     style: theme.textTheme.titleMedium,
                   ),
-                  // مجموعة الأزرار
                   Row(
                     children: [
-                      // زر نسخ الكود
                       IconButton(
                         icon: const Icon(Icons.code, size: 20),
                         tooltip: l10n.gradientCopyCode,
                         onPressed: () => _copyCssCode(context),
                       ),
-                      // زر الحذف
                       IconButton(
                         icon: const Icon(Icons.delete_outline, size: 20),
                         tooltip: l10n.removeFavoriteTooltip,
