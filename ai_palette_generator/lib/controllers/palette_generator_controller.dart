@@ -1,26 +1,23 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart'
-    as http; 
 import 'package:ai_palette_generator/models/color_palette.dart';
 import 'package:ai_palette_generator/models/industry_type.dart';
-import 'package:ai_palette_generator/services/industry_palette_service.dart';
 import 'package:ai_palette_generator/services/ai_palette_service.dart';
+import 'package:ai_palette_generator/services/industry_palette_service.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
 final paletteGeneratorProvider =
     StateNotifierProvider<PaletteGeneratorNotifier, AsyncValue<ColorPalette>>((
-      ref,
-    ) {
-      return PaletteGeneratorNotifier();
-    });
+  ref,
+ ) {
+  return PaletteGeneratorNotifier();
+});
 
 class PaletteGeneratorNotifier extends StateNotifier<AsyncValue<ColorPalette>> {
   final AiPaletteService _aiService = AiPaletteService();
 
-  PaletteGeneratorNotifier() : super(const AsyncValue.loading()) {
-    generateRandomPalette();
-  }
+  PaletteGeneratorNotifier() : super(const AsyncValue.loading());
 
   Color _colorFromRgb(List<dynamic> rgb) =>
       Color.fromRGBO(rgb[0], rgb[1], rgb[2], 1.0);
@@ -29,15 +26,14 @@ class PaletteGeneratorNotifier extends StateNotifier<AsyncValue<ColorPalette>> {
   Future<void> generateRandomPalette({int count = 5}) async {
     state = const AsyncValue.loading();
     try {
-      final url = Uri.parse('http://colormind.io/api/');
+      final url = Uri.parse('http://colormind.io/api/' );
       final body = json.encode({'model': 'default'});
-      final response = await http.post(url, body: body);
+      final response = await http.post(url, body: body );
 
       if (response.statusCode == 200) {
         final List<dynamic> colorsRgb = json.decode(response.body)['result'];
-        final List<Color> colors = colorsRgb
-            .map((rgb) => _colorFromRgb(rgb))
-            .toList();
+        final List<Color> colors =
+            colorsRgb.map((rgb) => _colorFromRgb(rgb)).toList();
         state = AsyncValue.data(
           ColorPalette(
             id: DateTime.now().toIso8601String(),
@@ -52,19 +48,19 @@ class PaletteGeneratorNotifier extends StateNotifier<AsyncValue<ColorPalette>> {
     }
   }
 
-  Future<void> generatePaletteFromBase(Color baseColor, {int count = 5}) async {
+  Future<void> generatePaletteFromBase(Color baseColor,
+      {int count = 5}) async {
     state = const AsyncValue.loading();
     try {
-      final url = Uri.parse('http://colormind.io/api/');
+      final url = Uri.parse('http://colormind.io/api/' );
       final input = [_colorToRgb(baseColor), "N", "N", "N", "N"];
       final body = json.encode({'model': 'default', 'input': input});
-      final response = await http.post(url, body: body);
+      final response = await http.post(url, body: body );
 
       if (response.statusCode == 200) {
         final List<dynamic> colorsRgb = json.decode(response.body)['result'];
-        final List<Color> colors = colorsRgb
-            .map((rgb) => _colorFromRgb(rgb))
-            .toList();
+        final List<Color> colors =
+            colorsRgb.map((rgb) => _colorFromRgb(rgb)).toList();
         state = AsyncValue.data(
           ColorPalette(
             id: DateTime.now().toIso8601String(),
@@ -100,10 +96,16 @@ class PaletteGeneratorNotifier extends StateNotifier<AsyncValue<ColorPalette>> {
 
     state = const AsyncValue.loading();
     try {
-      final colors = await _aiService.getPaletteFromDescription(
-        description,
-        count,
+      final List<ColorAnalysis> analysisResult =
+          await _aiService.getPaletteFromDescription(
+        description: description,
+        colorCount: count,
+        languageCode: 'en', 
+        designContext: 'other', 
       );
+
+      final List<Color> colors = analysisResult.map((e) => e.color).toList();
+
       state = AsyncValue.data(
         ColorPalette(
           id: DateTime.now().toIso8601String(),

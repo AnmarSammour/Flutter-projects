@@ -1,5 +1,4 @@
 import 'package:ai_palette_generator/controllers/page_index_provider.dart';
-import 'package:ai_palette_generator/views/screens/generate_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ai_palette_generator/views/screens/favorites_screen.dart';
@@ -12,7 +11,6 @@ class MainWrapper extends ConsumerWidget {
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    GenerateScreen(),
     FavoritesScreen(),
     SettingsScreen(),
   ];
@@ -22,13 +20,12 @@ class MainWrapper extends ConsumerWidget {
     final l10n = AppLocal.of(context);
     final currentIndex = ref.watch(pageIndexProvider);
 
+    final safeIndex = currentIndex < _screens.length ? currentIndex : 0;
+
     return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: safeIndex, children: _screens),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
+        currentIndex: safeIndex,
         onTap: (index) {
           ref.read(pageIndexProvider.notifier).state = index;
         },
@@ -37,10 +34,21 @@ class MainWrapper extends ConsumerWidget {
         selectedItemColor: Colors.blueAccent,
         unselectedItemColor: Colors.grey,
         items: [
-          BottomNavigationBarItem(icon: const Icon(Icons.home_outlined), activeIcon: const Icon(Icons.home), label: l10n.navHome),
-          BottomNavigationBarItem(icon: const Icon(Icons.palette_outlined), activeIcon: const Icon(Icons.palette), label: l10n.navGenerate),
-          BottomNavigationBarItem(icon: const Icon(Icons.favorite_border), activeIcon: const Icon(Icons.favorite), label: l10n.navFavorites),
-          BottomNavigationBarItem(icon: const Icon(Icons.settings_outlined), activeIcon: const Icon(Icons.settings), label: l10n.navSettings),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home_outlined),
+            activeIcon: const Icon(Icons.home),
+            label: l10n.navHome,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.favorite_border),
+            activeIcon: const Icon(Icons.favorite),
+            label: l10n.navFavorites,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings_outlined),
+            activeIcon: const Icon(Icons.settings),
+            label: l10n.navSettings,
+          ),
         ],
       ),
     );

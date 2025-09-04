@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'api_secrets.dart'; 
+import 'api_secrets.dart';
 
 class ColorAnalysis {
   final String hex;
@@ -22,28 +22,27 @@ class ColorAnalysis {
 
 class ImageAnalysisResult {
   final List<ColorAnalysis> palette;
-  final String? logoCritique; 
+  final String? logoCritique;
 
   ImageAnalysisResult({required this.palette, this.logoCritique});
 }
 
+
 class AiPaletteService {
   final GenerativeModel _textModel;
-
   final GenerativeModel _visionModel;
 
   AiPaletteService()
-    : _textModel = GenerativeModel(
-        model: 'gemini-1.5-flash',
-        apiKey: geminiApiKey,
-      ),
-      _visionModel = GenerativeModel(
-        model: 'gemini-1.5-flash',
-        apiKey: geminiApiKey,
-        generationConfig: GenerationConfig(
-          maxOutputTokens: 4096, 
+      : _textModel = GenerativeModel(
+          model: 'gemini-1.5-flash',
+          apiKey: geminiApiKey,
+          generationConfig: GenerationConfig(maxOutputTokens: 4096),
         ),
-      );
+        _visionModel = GenerativeModel(
+          model: 'gemini-1.5-flash',
+          apiKey: geminiApiKey,
+          generationConfig: GenerationConfig(maxOutputTokens: 4096),
+        );
 
   Color _hexToColor(String hex) {
     final buffer = StringBuffer();
@@ -52,19 +51,29 @@ class AiPaletteService {
     return Color(int.parse(buffer.toString(), radix: 16));
   }
 
-  Future<List<Color>> getPaletteFromDescription(
-    String description,
-    int colorCount,
-  ) async {
-    final prompt =
-        '''
-      Act as an expert color palette designer.
-      Based on the following description, generate a harmonious color palette with exactly $colorCount colors.
-      The description is: "$description".
+  Future<List<ColorAnalysis>> getPaletteFromDescription({
+    required String description,
+    required int colorCount,
+    required String languageCode,
+    required String designContext,
+  }) async {
+    final String languageName = languageCode == 'ar' ? 'Arabic' : 'English';
+    final prompt = '''
+      Act as an expert UI/UX designer and color theorist.
+      The user wants to generate a harmonious color palette with exactly $colorCount colors.
+      
+      The user has specified the design context is: **$designContext**.
+      The user's description is: "$description".
 
-      Your response MUST be a valid JSON array of strings, where each string is a hex color code.
-      Do not include any other text, explanations, or markdown.
-      Example response for 2 colors: ["#FF5733", "#33FF57"]
+      Your response MUST be a valid JSON array of objects. Each object must represent a color and have the following structure:
+      {
+        "hex": The hex color code string (e.g., "#33FF57").
+        "name": A short, descriptive name for the color in **$languageName**.
+        "usageSuggestion": A concise, one-sentence suggestion in **$languageName** on how this color could be used. **Crucially, tailor this suggestion to the specified design context ($designContext)**.
+      }
+
+      For example, if the context is 'App UI', suggest uses for buttons, backgrounds, etc. If it's 'Artistic Painting', suggest uses for highlights, shadows, etc.
+      Do not include any other text, explanations, or markdown. The entire response must be a single JSON array.
     ''';
 
     final content = [Content.text(prompt)];
@@ -73,31 +82,32 @@ class AiPaletteService {
     if (response.text != null) {
       try {
         final responseText = response.text!;
-        final cleanedJsonString = responseText
-            .replaceAll('```json', '')
-            .replaceAll('```', '')
-            .trim();
+        final cleanedJsonString =
+            responseText.replaceAll('```json', '').replaceAll('```', '').trim();
         if (cleanedJsonString.isNotEmpty) {
-          final List<dynamic> hexCodes = json.decode(cleanedJsonString);
-          final colors = hexCodes
-              .map((hex) => _hexToColor(hex.toString()))
-              .toList();
-          return colors;
+          final List<dynamic> jsonData = json.decode(cleanedJsonString);
+          return jsonData.map((colorData) {
+            return ColorAnalysis(
+              hex: colorData['hex'],
+              color: _hexToColor(colorData['hex']),
+              name: colorData['name'],
+              usageSuggestion: colorData['usageSuggestion'],
+              shades: [],
+            );
+          }).toList();
         }
       } catch (e) {
         debugPrint('Error parsing Gemini text response: $e');
         throw Exception('Failed to parse AI response from text.');
       }
     }
-    throw Exception(
-      'Failed to get a valid response from the AI model for text.',
-    );
+    throw Exception('Failed to get a valid response from the AI model for text.');
   }
 
   Future<ImageAnalysisResult> getPaletteFromImage({
     required Uint8List imageBytes,
     required String languageCode,
-    required String imageType, 
+    required String imageType,
     String? contextDescription,
   }) async {
     final String languageName = languageCode == 'ar' ? 'Arabic' : 'English';

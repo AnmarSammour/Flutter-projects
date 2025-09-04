@@ -11,20 +11,16 @@ class AppLocal {
 
   // --- ARABIC ---
   static final Map<String, String> _ar = {
-    'appTitle': 'مولد لوحات الألوان الذكي',
     'navHome': 'الرئيسية',
     'navGenerate': 'إنشاء',
     'navFavorites': 'المفضلة',
     'navSettings': 'الإعدادات',
     'homeGeneratePaletteTitle': 'إنشاء لوحة',
     'homeGeneratePaletteSubtitle': 'من الصفر، لون، أو وصف',
-    'homeUploadImageTitle': 'رفع صورة',
-    'homeUploadImageSubtitle': 'استخراج من شعار',
     'homeFavoritesTitle': 'المفضلة',
     'homeFavoritesSubtitle': 'لوحاتك المحفوظة',
     'generateScreenTitle': 'إنشاء لوحة ألوان',
     'colorCountLabel': 'عدد الألوان',
-    'refreshButton': 'تحديث عشوائي',
     'copiedToClipboard': 'تم نسخ الكود: ',
     'errorFailedToLoad': 'حدث خطأ في جلب اللوحة',
     'settingsScreenTitle': 'الإعدادات',
@@ -32,7 +28,6 @@ class AppLocal {
     'arabic': 'العربية',
     'english': 'الإنجليزية',
     'baseColorLabel': 'اللون الأساسي',
-    'pickColorButton': 'اختر لون',
     'savePaletteButton': 'حفظ اللوحة',
     'paletteSaved': 'تم حفظ اللوحة في المفضلة!',
     'favoritesEmptyTitle': 'المفضلة فارغة',
@@ -47,8 +42,6 @@ class AppLocal {
     'industryTech': 'تقني / شركات',
     'industryHealth': 'صحي / طبي',
     'industryFood': 'طعام / مطاعم',
-    'aiDescriptionLabel': 'أو صف تصميمك (AI)',
-    'aiDescriptionHint': 'مثال: غروب الشمس على الشاطئ...',
     'generateFromDescription': 'ولّد من الوصف',
     'uploadScreenTitle': 'استخراج الألوان من صورة',
     'uploadSelectImage': 'اختر صورة من المعرض',
@@ -94,24 +87,42 @@ class AppLocal {
     'startOver': 'البدء من جديد',
     'logoCritiqueTitle': 'تقييم الشعار',
     'colorAnalysisTitle': 'تحليل الألوان',
+    'appTitle': 'مولد لوحات الألوان',
+    'homeAiGeneratorTitle': 'إنشاء بوصف (AI)',
+    'homeAiGeneratorSubtitle': 'صف تصميمك والذكاء الاصطناعي يُنشئ',
+    'homeRandomGeneratorTitle': 'إنشاء عشوائي',
+    'homeRandomGeneratorSubtitle': 'لوحات ألوان سريعة وغير متوقعة',
+    'homeBaseColorGeneratorTitle': 'إنشاء من لون أساسي',
+    'homeBaseColorGeneratorSubtitle': 'اختر لونًا وابنِ لوحة حوله',
+    'homeIndustryGeneratorTitle': 'ألوان حسب المجال',
+    'homeIndustryGeneratorSubtitle': 'لوحات جاهزة لمجالات مختلفة',
+    'homeUploadImageTitle': 'تحليل صورة',
+    'homeUploadImageSubtitle': 'استخراج وتحليل الألوان',
+    'refreshButton': 'تحديث',
+    'generateButton': 'إنشاء',
+    'pickColorButton': 'اختر لون أساسي',
+    'aiDescriptionLabel': 'صف تصميمك أو فكرتك',
+    'aiDescriptionHint': 'مثال: تطبيق تأمل هادئ بألوان الطبيعة...',
+    'aiScreenInitialText': 'اكتب وصفًا لتصميمك لتبدأ',
+    'designContextLabel': 'ما هو سياق التصميم؟',
+    'contextApp': 'واجهة تطبيق',
+    'contextLogo': 'تصميم شعار',
+    'contextPainting': 'لوحة فنية',
+    'contextOther': 'أخرى',
   };
 
   // --- ENGLISH ---
   static final Map<String, String> _en = {
-    'appTitle': 'AI Palette Generator',
     'navHome': 'Home',
     'navGenerate': 'Generate',
     'navFavorites': 'Favorites',
     'navSettings': 'Settings',
     'homeGeneratePaletteTitle': 'Generate Palette',
     'homeGeneratePaletteSubtitle': 'From scratch, color, or text',
-    'homeUploadImageTitle': 'Upload Image',
-    'homeUploadImageSubtitle': 'Extract from a logo',
     'homeFavoritesTitle': 'Favorites',
     'homeFavoritesSubtitle': 'Your saved palettes',
     'generateScreenTitle': 'Generate Color Palette',
     'colorCountLabel': 'Number of Colors',
-    'refreshButton': 'Random Refresh',
     'copiedToClipboard': 'Copied to clipboard: ',
     'errorFailedToLoad': 'Failed to load palette',
     'settingsScreenTitle': 'Settings',
@@ -119,7 +130,6 @@ class AppLocal {
     'arabic': 'Arabic',
     'english': 'English',
     'baseColorLabel': 'Base Color',
-    'pickColorButton': 'Pick a Color',
     'savePaletteButton': 'Save Palette',
     'paletteSaved': 'Palette saved to favorites!',
     'favoritesEmptyTitle': 'Favorites is Empty',
@@ -135,10 +145,7 @@ class AppLocal {
     'industryTech': 'Tech / Corporate',
     'industryHealth': 'Health / Medical',
     'industryFood': 'Food / Restaurant',
-    'aiDescriptionLabel': 'Or describe your design (AI)',
-    'aiDescriptionHint': 'e.g., sunset on a beach...',
     'generateFromDescription': 'Generate from Description',
-    'uploadScreenTitle': 'Extract Colors from Image',
     'uploadSelectImage': 'Select from Gallery',
     'uploadTakePhoto': 'Take a Photo',
     'uploadInstructions':
@@ -183,6 +190,30 @@ class AppLocal {
     'startOver': 'Start Over',
     'logoCritiqueTitle': 'Logo Critique',
     'colorAnalysisTitle': 'Color Analysis',
+    'appTitle': 'Palette Generator',
+    'homeAiGeneratorTitle': 'Generate with AI',
+    'homeAiGeneratorSubtitle': 'Describe your design for an AI palette',
+    'homeRandomGeneratorTitle': 'Random Generator',
+    'homeRandomGeneratorSubtitle': 'Quick and unexpected color palettes',
+    'homeBaseColorGeneratorTitle': 'Generate from Base Color',
+    'homeBaseColorGeneratorSubtitle':
+        'Pick a color and build a palette around it',
+    'homeIndustryGeneratorTitle': 'Palettes by Industry',
+    'homeIndustryGeneratorSubtitle': 'Ready-made palettes for different fields',
+    'homeUploadImageTitle': 'Analyze Image',
+    'homeUploadImageSubtitle': 'Extract & analyze colors',
+    'refreshButton': 'Refresh',
+    'generateButton': 'Generate',
+    'pickColorButton': 'Pick a Base Color',
+    'aiDescriptionLabel': 'Describe your design or idea',
+    'aiDescriptionHint': 'e.g., a calm meditation app with nature colors...',
+    'aiScreenInitialText': 'Write a description of your design to start',
+    'uploadScreenTitle': 'Analyze Colors from Image',
+    'designContextLabel': 'What is the design context?',
+    'contextApp': 'App UI',
+    'contextLogo': 'Logo Design',
+    'contextPainting': 'Artistic Painting',
+    'contextOther': 'Other',
   };
 
   static final Map<String, Map<String, String>> _localizedValues = {
@@ -349,6 +380,36 @@ class AppLocal {
       _localizedValues[locale.languageCode]!['logoCritiqueTitle']!;
   String get colorAnalysisTitle =>
       _localizedValues[locale.languageCode]!['colorAnalysisTitle']!;
+  String get homeAiGeneratorTitle =>
+      _localizedValues[locale.languageCode]!['homeAiGeneratorTitle']!;
+  String get homeAiGeneratorSubtitle =>
+      _localizedValues[locale.languageCode]!['homeAiGeneratorSubtitle']!;
+  String get homeRandomGeneratorTitle =>
+      _localizedValues[locale.languageCode]!['homeRandomGeneratorTitle']!;
+  String get homeRandomGeneratorSubtitle =>
+      _localizedValues[locale.languageCode]!['homeRandomGeneratorSubtitle']!;
+  String get homeBaseColorGeneratorTitle =>
+      _localizedValues[locale.languageCode]!['homeBaseColorGeneratorTitle']!;
+  String get homeBaseColorGeneratorSubtitle =>
+      _localizedValues[locale.languageCode]!['homeBaseColorGeneratorSubtitle']!;
+  String get homeIndustryGeneratorTitle =>
+      _localizedValues[locale.languageCode]!['homeIndustryGeneratorTitle']!;
+  String get homeIndustryGeneratorSubtitle =>
+      _localizedValues[locale.languageCode]!['homeIndustryGeneratorSubtitle']!;
+  String get generateButton =>
+      _localizedValues[locale.languageCode]!['generateButton']!;
+  String get aiScreenInitialText =>
+      _localizedValues[locale.languageCode]!['aiScreenInitialText']!;
+  String get designContextLabel =>
+      _localizedValues[locale.languageCode]!['designContextLabel']!;
+  String get contextApp =>
+      _localizedValues[locale.languageCode]!['contextApp']!;
+  String get contextLogo =>
+      _localizedValues[locale.languageCode]!['contextLogo']!;
+  String get contextPainting =>
+      _localizedValues[locale.languageCode]!['contextPainting']!;
+  String get contextOther =>
+      _localizedValues[locale.languageCode]!['contextOther']!;
 }
 
 // Delegate class
