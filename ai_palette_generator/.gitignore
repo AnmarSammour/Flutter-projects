@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+# Secrets and environment variables added by user
+.env
+lib/services/api_secrets.dart
