@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'api_secrets.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ColorAnalysis {
   final String hex;
@@ -27,22 +27,21 @@ class ImageAnalysisResult {
   ImageAnalysisResult({required this.palette, this.logoCritique});
 }
 
-
 class AiPaletteService {
   final GenerativeModel _textModel;
   final GenerativeModel _visionModel;
 
   AiPaletteService()
-      : _textModel = GenerativeModel(
-          model: 'gemini-1.5-flash',
-          apiKey: geminiApiKey,
-          generationConfig: GenerationConfig(maxOutputTokens: 4096),
-        ),
-        _visionModel = GenerativeModel(
-          model: 'gemini-1.5-flash',
-          apiKey: geminiApiKey,
-          generationConfig: GenerationConfig(maxOutputTokens: 4096),
-        );
+    : _textModel = GenerativeModel(
+        model: 'gemini-1.5-flash',
+        apiKey: dotenv.env['GEMINI_API_KEY']!,
+        generationConfig: GenerationConfig(maxOutputTokens: 4096),
+      ),
+      _visionModel = GenerativeModel(
+        model: 'gemini-1.5-flash',
+        apiKey: dotenv.env['GEMINI_API_KEY']!,
+        generationConfig: GenerationConfig(maxOutputTokens: 4096),
+      );
 
   Color _hexToColor(String hex) {
     final buffer = StringBuffer();
@@ -58,7 +57,8 @@ class AiPaletteService {
     required String designContext,
   }) async {
     final String languageName = languageCode == 'ar' ? 'Arabic' : 'English';
-    final prompt = '''
+    final prompt =
+        '''
       Act as an expert UI/UX designer and color theorist.
       The user wants to generate a harmonious color palette with exactly $colorCount colors.
       
@@ -82,8 +82,10 @@ class AiPaletteService {
     if (response.text != null) {
       try {
         final responseText = response.text!;
-        final cleanedJsonString =
-            responseText.replaceAll('```json', '').replaceAll('```', '').trim();
+        final cleanedJsonString = responseText
+            .replaceAll('```json', '')
+            .replaceAll('```', '')
+            .trim();
         if (cleanedJsonString.isNotEmpty) {
           final List<dynamic> jsonData = json.decode(cleanedJsonString);
           return jsonData.map((colorData) {
@@ -101,7 +103,9 @@ class AiPaletteService {
         throw Exception('Failed to parse AI response from text.');
       }
     }
-    throw Exception('Failed to get a valid response from the AI model for text.');
+    throw Exception(
+      'Failed to get a valid response from the AI model for text.',
+    );
   }
 
   Future<ImageAnalysisResult> getPaletteFromImage({

@@ -9,6 +9,7 @@ import 'package:ai_palette_generator/controllers/language_controller.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ai_palette_generator/models/color_adapter.dart';
 import 'package:ai_palette_generator/models/color_palette.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,7 @@ Future<void> main() async {
 
   await Hive.openBox<ColorPalette>('palettes_box');
   await Hive.openBox<GradientPalette>('gradients_box');
+  await dotenv.load(fileName: ".env");
   runApp(const ProviderScope(child: MyApp()));
 }
 
