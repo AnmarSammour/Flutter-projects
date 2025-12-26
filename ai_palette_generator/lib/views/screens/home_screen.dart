@@ -1,4 +1,5 @@
 import 'package:ai_palette_generator/localization/app_local.dart';
+import 'package:ai_palette_generator/services/theme_service.dart'; 
 import 'package:ai_palette_generator/views/screens/generation/ai_generate_screen.dart';
 import 'package:ai_palette_generator/views/screens/generation/base_color_generate_screen.dart';
 import 'package:ai_palette_generator/views/screens/generation/industry_generate_screen.dart';
@@ -13,13 +14,17 @@ class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   void _navigateTo(BuildContext context, Widget screen) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocal.of(context);
     final theme = Theme.of(context);
+
     final List<Map<String, dynamic>> options = [
       {
         'title': l10n.homeAiGeneratorTitle,
@@ -71,41 +76,47 @@ class HomeScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 24.0, 16.0, 16.0),
-              child: Text(
-                l10n.appTitle,
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md,
+                AppSpacing.lg,
+                AppSpacing.md,
+                AppSpacing.md,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.appTitle,
+                    style: theme.textTheme.headlineLarge,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    'Create beautiful color palettes',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                ],
               ),
             ),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final double screenWidth = constraints.maxWidth;
-                  final int crossAxisCount;
-                  if (screenWidth >= 1200) {
-                    crossAxisCount = 4;
-                  } else if (screenWidth >= 600) {
-                    crossAxisCount = 3; 
-                  } else {
-                    crossAxisCount = 2; 
-                  }
+                  final int crossAxisCount = _getCrossAxisCount(constraints.maxWidth);
+                  
+                  final double childAspectRatio = _getChildAspectRatio(constraints.maxWidth);
 
-                  final double childAspectRatio = (screenWidth < 600) ? 1.0 : 1.2;
                   return GridView.count(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(AppSpacing.md),
                     crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 16.0,
-                    mainAxisSpacing: 16.0,
+                    crossAxisSpacing: AppSpacing.md,
+                    mainAxisSpacing: AppSpacing.md,
                     childAspectRatio: childAspectRatio,
                     children: options.map((option) {
                       return OptionCard(
-                        title: option['title'],
-                        subtitle: option['subtitle'],
-                        icon: option['icon'],
-                        color: option['color'],
-                        onTap: option['onTap'],
+                        title: option['title'] as String,
+                        subtitle: option['subtitle'] as String,
+                        icon: option['icon'] as IconData,
+                        color: option['color'] as Color,
+                        onTap: option['onTap'] as VoidCallback,
                       );
                     }).toList(),
                   );
@@ -116,5 +127,27 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  int _getCrossAxisCount(double screenWidth) {
+    if (screenWidth >= 1200) {
+      return 4; // Desktop
+    } else if (screenWidth >= 900) {
+      return 3; // Large tablet
+    } else if (screenWidth >= 600) {
+      return 2; // Small tablet / landscape 
+    } else {
+      return 2; // Mobile
+    }
+  }
+
+  double _getChildAspectRatio(double screenWidth) {
+    if (screenWidth >= 1200) {
+      return 1.3;
+    } else if (screenWidth >= 600) {
+      return 1.1;
+    } else {
+      return 0.95;
+    }
   }
 }
