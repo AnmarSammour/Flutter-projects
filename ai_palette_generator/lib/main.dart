@@ -10,18 +10,21 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ai_palette_generator/models/color_adapter.dart';
 import 'package:ai_palette_generator/models/color_palette.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ai_palette_generator/services/theme_service.dart'; 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   await Hive.initFlutter();
   Hive.registerAdapter(ColorPaletteAdapter());
   Hive.registerAdapter(ColorAdapter());
   Hive.registerAdapter(GradientPaletteAdapter());
   Hive.registerAdapter(GradientAlignmentTypeAdapter());
-
-  await Hive.openBox<ColorPalette>('palettes_box');
-  await Hive.openBox<GradientPalette>('gradients_box');
+  
+  await Hive.openBox('palettes_box');
+  await Hive.openBox('gradients_box');
   await dotenv.load(fileName: ".env");
+  
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -33,27 +36,23 @@ class MyApp extends ConsumerWidget {
     final locale = ref.watch(localeProvider);
 
     return MaterialApp(
+      title: 'AI Palette Generator',
       onGenerateTitle: (context) => AppLocal.of(context).appTitle,
-
+      
+      theme: AppTheme.darkTheme,
+      
+      debugShowCheckedModeBanner: false,
+      
       localizationsDelegates: const [
         AppLocal.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      
       supportedLocales: AppLocal.supportedLocales,
-
       locale: locale,
-
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF121212),
-        cardColor: const Color(0xFF1E1E1E),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          brightness: Brightness.dark,
-        ),
-      ),
+      
       builder: (context, child) {
         return Directionality(
           textDirection: locale.languageCode == 'ar'
@@ -62,6 +61,7 @@ class MyApp extends ConsumerWidget {
           child: child!,
         );
       },
+      
       home: const MainWrapper(),
     );
   }
