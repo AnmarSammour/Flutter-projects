@@ -147,7 +147,7 @@ class _GenerateScreenState extends ConsumerState<GenerateScreen> {
             return Row(
               children: [
                 Expanded(flex: 3, child: paletteView),
-                Container(
+                SizedBox(
                   width: 320,
                   child: controlPanelView,
                 ),

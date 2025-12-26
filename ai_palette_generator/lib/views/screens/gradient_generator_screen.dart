@@ -138,8 +138,9 @@ class _GradientGeneratorScreenState
                       );
                     }).toList(),
                     onChanged: (newValue) {
-                      if (newValue != null)
+                      if (newValue != null) {
                         setState(() => _alignmentType = newValue);
+                      }
                     },
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
@@ -172,11 +173,11 @@ class _GradientGeneratorScreenState
   }
 
   Future<void> _editColor(int index) async {
-    final Color? newColor = await showColorPickerDialog(
+    final Color newColor = await showColorPickerDialog(
       context,
       _gradientColors[index],
     );
-    if (newColor != null && mounted) {
+    if (mounted) {
       setState(() {
         final updatedColors = List<Color>.from(_gradientColors);
         updatedColors[index] = newColor;
@@ -186,8 +187,8 @@ class _GradientGeneratorScreenState
   }
 
   Future<void> _addNewColor() async {
-    final Color? newColor = await showColorPickerDialog(context, Colors.green);
-    if (newColor != null && mounted) {
+    final Color newColor = await showColorPickerDialog(context, Colors.green);
+    if (mounted) {
       setState(() {
         _gradientColors = [..._gradientColors, newColor];
       });
